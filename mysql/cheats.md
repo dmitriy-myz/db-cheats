@@ -1,4 +1,4 @@
-``sql
+```sql
 show databases
 ```
 ```sql
@@ -172,11 +172,22 @@ DROP PROCEDURE IF EXISTS ANALYZE_INVALID_FOREIGN_KEYS;
 
 SELECT * FROM INVALID_FOREIGN_KEYS;
 ```
+Recover crashed mysql DB.  
+1. backup mysql data directory  
+2. Create a new db directory `mysql_install_db`  
+3. create database, create tables  
+4. discard old tablespaces, copy back *.ibd files, import tablespace  
+5. mysqldump whole db  
+6. create a new database, import  
+7. check foreign keys  
+[source](http://dba.stackexchange.com/questions/6268/how-to-recover-an-innodb-table-whose-files-were-moved-around/6269#6269)
 
 
+Discard tablespace.
 ```sql
 ALTER TABLE tblname DISCARD TABLESPACE;
 ```
+Import tablespace
 
 ```sql
 ALTER TABLE tblname IMPORT TABLESPACE;
