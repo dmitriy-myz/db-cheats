@@ -53,7 +53,29 @@ WHEN pg_last_xlog_receive_location() = pg_last_xlog_replay_location() THEN 0
 END
 AS replication_lag;
 ```
-
-
-
+tables size
+```sql
+SELECT
+schemaname||'.'||tablename AS full_tname,
+pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS total_usage,
+pg_size_pretty((pg_total_relation_size(schemaname||'.'||tablename) - pg_relation_size(schemaname||'.'||tablename))) AS external_table_usage
+FROM pg_catalog.pg_tables
+ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
+```
+indexes size
+```sql
+SELECT
+schemaname||'.'||indexname AS full_iname,
+pg_size_pretty(pg_total_relation_size(schemaname||'.'||indexname)) AS total_usage,
+pg_size_pretty((pg_total_relation_size(schemaname||'.'||indexname) - pg_relation_size(schemaname||'.'||indexname))) AS external_index_usage
+FROM pg_catalog.pg_indexes
+ORDER BY pg_total_relation_size(schemaname||'.'||indexname) DESC
+```
+vacuum count
+```sql
+SELECT
+schemaname||'.'||relname as full_relname,
+vacuum_count, autovacuum_count, analyze_count, autoanalyze_count
+from  pg_stat_all_tables;
+```
 
